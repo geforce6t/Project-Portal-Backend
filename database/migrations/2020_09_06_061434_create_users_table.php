@@ -9,9 +9,11 @@ class CreateUsersTable extends Migration {
 	{
 		Schema::create('users', function(Blueprint $table) {
 			$table->increments('id');
-			$table->integer('roll_number');
+			$table->integer('roll_number')->unique();
+			$table->string('email')->unique();
+			$table->string('password', 255);
 			$table->string('name', 255);
-			$table->string('github_link', 255);
+			$table->string('github_handle', 255);
 			$table->timestamps();
 		});
 	}
