@@ -15,21 +15,16 @@ class ProjectController extends Controller
      */
     public function all(Request $request)
     {
-        /**
-         * @todo: Uncomment after creating auth middleware
         $userId = $request->user()->id;
-         */
+
         return response()->json([
             'message' => 'Success!',
             'data' => [
                 'projects' => Project::with([
-                    /**
-                     * @todo: Uncomment after creating auth middleware
                     'feedbacks' => function ($feedback) use ($userId) {
                         $feedback->where('sender_id', $userId)
                             ->orWhere('receiver_id', $userId);
-                    }
-                     */
+                    },
                     'stacks',
                     'status',
                     'users',
@@ -48,28 +43,23 @@ class ProjectController extends Controller
      */
     public function show(Request $request, $projectId)
     {
-        /**
-         * @todo: Uncomment after creating auth middleware
         $userId = $request->user()->id;
-         */
+
         try {
             Project::findOrFail($projectId);
         } catch (\Exception $e) {
             return response()->json([
-                'error' => 'Project doesn\'t exist!'
+                'message' => 'Project doesn\'t exist!'
             ], 404);
         }
         return response()->json([
             'message' => 'Success!',
             'data' => [
                 'project' => Project::where('id', $projectId)->with([
-                    /**
-                     * @todo: Uncomment after creating auth middleware
                     'feedbacks' => function ($feedback) use ($userId) {
                         $feedback->where('sender_id', $userId)
                             ->orWhere('receiver_id', $userId);
                     },
-                     */
                     'stacks',
                     'status',
                     'users',
@@ -162,7 +152,7 @@ class ProjectController extends Controller
             $project = Project::findOrFail($projectId);
         } catch (\Exception $e) {
             return response()->json([
-                'error' => 'Project doesn\'t exist!'
+                'message' => 'Project doesn\'t exist!'
             ], 404);
         }
 
@@ -173,7 +163,7 @@ class ProjectController extends Controller
             })->get()
             ->contains($user->id)) {
             return response()->json([
-                'error' => 'You are not allowed to edit this project!'
+                'message' => 'You are not allowed to edit this project!'
             ], 403);
         }
 
@@ -246,7 +236,7 @@ class ProjectController extends Controller
             $project = Project::findOrFail($projectId);
         } catch (\Exception $e) {
             return response()->json([
-                'error' => 'Project doesn\'t exist!'
+                'message' => 'Project doesn\'t exist!'
             ], 404);
         }
 
@@ -255,7 +245,7 @@ class ProjectController extends Controller
             ->get()
             ->contains($user->id)) {
             return response()->json([
-                'error' => 'You are not allowed to delete this project!'
+                'message' => 'You are not allowed to delete this project!'
             ], 403);
         }
 
