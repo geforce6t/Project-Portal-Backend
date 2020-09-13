@@ -15,9 +15,16 @@ class FeedbackController extends Controller
             $feedbacks_sent = Project::find($project_id)->feedbacks()->where('sender_id', auth()->user()->id)->get();
             $feedbacks_recieved = Project::find($project_id)->feedbacks()->where('receiver_id', auth()->user()->id)->get();
         
-            return response(['feedback_sent' => $feedbacks_sent, 'feedback_received' => $feedbacks_recieved]);
+            return response([
+                'message' => "Successfully fetched feedbacks", 
+                'feedback_sent' => $feedbacks_sent, 
+                'feedback_received' => $feedbacks_recieved
+            ]);
+
         } else {
-            return response()->json(['message' => 'Project not Found'], 404);
+            return response()->json([
+                'message' => 'Project not Found'
+            ], 404);
         }
     }
 
@@ -36,9 +43,14 @@ class FeedbackController extends Controller
                 
             $feedback->save();
         } else{
-            return response()->json(['message' => 'Only Members of Project can add a Feedback'], 403);        
-            //redirect to view 
-        }            
+            return response()->json([
+                'message' => 'Only Members of Project can add a Feedback'
+            ], 403);        
+        } 
+        
+        return response()->json([
+            'message' => 'Feedback added successfully'
+        ], 200);
     }
 
     public function edit(Request $request)
@@ -49,11 +61,14 @@ class FeedbackController extends Controller
 
             $feedback->content = $request->content;
             $feedback->save();
-            return $feedback;
-            //redirect            
+            return response()->json([
+                'message' => 'Feedback edited successfully'
+            ], 200);         
 
         } else {
-            return response()->json(['message' => 'Only Creator of a Feedback can edit a Feedback'], 403);
+            return response()->json([
+                'message' => 'Only Creator of a Feedback can edit a Feedback'
+            ], 403);
         }        
     }
 
@@ -68,7 +83,9 @@ class FeedbackController extends Controller
                 $review_project->review = $request->review;
                 return $review_project;
         } else {
-            return response()->json(['message' => 'Only Maintainers of Project can Review'], 403);
+            return response()->json([
+                'message' => 'Only Maintainers of Project can Review'
+            ], 403);
         }            
     }
 }
