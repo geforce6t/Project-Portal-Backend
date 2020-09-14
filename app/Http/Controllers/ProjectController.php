@@ -118,10 +118,10 @@ class ProjectController extends Controller
             $project->save();
 
             // Save many-to-many relations
-            $project->users()->syncWithoutDetaching(
-                $user,
+            $project->users()->syncWithoutDetaching([
+                $user->id =>
                 ['role' => 'AUTHOR']
-            );
+            ]);
             if (isset($data['users'])) {
                 foreach ($data['users'] as $projectUser) {
                     $project->users()->syncWithoutDetaching([
@@ -205,11 +205,6 @@ class ProjectController extends Controller
             $project->status()->associate($data['status']);
             $project->save();
 
-            // Save many-to-many relations
-            $project->users()->syncWithoutDetaching(
-                $user,
-                ['role' => 'AUTHOR']
-            );
             if (isset($data['users'])) {
                 foreach ($data['users'] as $projectUser) {
                     $project->users()->syncWithoutDetaching([
@@ -230,6 +225,7 @@ class ProjectController extends Controller
     /**
      * Remove the specified project from storage.
      *
+     * @param  \Illuminate\Http\Request  $request
      * @param  int  $projectId
      * @return \Illuminate\Http\Response
      */
@@ -258,13 +254,13 @@ class ProjectController extends Controller
             $project->users()->each(function ($user) use ($projectId) {
                 $user->projects()->syncWithoutDetaching([
                     $projectId =>
-                        ['deleted_at' => \DB::raw('NOW()')]
+                        ['deleted_at' => \DB::raw('CURRENT_TIMESTAMP')]
                 ]);
             });
             $project->stacks()->each(function ($stack) use ($projectId) {
                 $stack->projects()->syncWithoutDetaching([
                     $projectId =>
-                        ['deleted_at' => \DB::raw('NOW()')]
+                        ['deleted_at' => \DB::raw('CURRENT_TIMESTAMP')]
                 ]);
             });
 
@@ -273,7 +269,7 @@ class ProjectController extends Controller
         });
 
         return response()->json([
-            'message' => 'Project successfully deleted'
+            'message' => 'Project deleted successfully!'
         ], 200);
 
     }
@@ -283,13 +279,13 @@ class ProjectController extends Controller
         $user_project = DB::table('project_user')->where([
             ['user_id','=' ,$user_id]
         ])->get();
-    
+
         $projects = [];
 
         if (User::find($user_id)) {
             if (count($user_project) != 0) {
                 foreach ($user_project as $single_project) {
-                    array_push($projects, Project::find($single_project->project_id)); 
+                    array_push($projects, Project::find($single_project->project_id));
                 }
                 return $projects;
             }else{
@@ -305,13 +301,13 @@ class ProjectController extends Controller
         $stack_project = DB::table('project_stack')->where([
             ['stack_id', '=' , $stack_id]
         ])->get();
-        
+
         $projects = [];
 
         if (Stack::find($stack_id)) {
             if (count($stack_project) != 0) {
                 foreach ($stack_project as $single_project) {
-                    array_push($projects, Project::find($single_project->project_id)); 
+                    array_push($projects, Project::find($single_project->project_id));
                 }
                 return $projects;
             }else{
@@ -327,7 +323,7 @@ class ProjectController extends Controller
         $projects = DB::table('projects')->where([
             ['type_id', '=' , $type_id]
         ])->get();
-        
+
 
         if (Type::find($type_id)) {
             if (count($projects) != 0) {
@@ -338,5 +334,28 @@ class ProjectController extends Controller
         } else {
             return response()->json(['message' => 'Type not Found'], 404);
         }
+    }
+
+    /**
+     * Adds new stack to the database
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function addStack(Request $request)
+    {
+        $data = $request->validate([
+            'name' => 'max:255|unique:stacks,name'
+        ]);
+        $stack = new Stack;
+        $stack->name = $data['name'];
+
+        \DB::transaction(function () use ($stack) {
+            $stack->save();
+        });
+
+        return response()->json([
+            'message' => 'Stack added successfully!'
+        ], 200);
     }
 }
