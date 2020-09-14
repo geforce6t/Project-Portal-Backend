@@ -24,6 +24,9 @@ trait MigrateAndSeedOnce
             Artisan::call(
                 'db:seed', ['--class' => 'UnitTestSeeder']
             );
+            Artisan::call(
+                'passport:install'
+            );
             static::$setUpHasRunOnce = true;
 
     }
