@@ -31,9 +31,14 @@ class ProjectController extends Controller
                     },
                     'stacks',
                     'status',
-                    'users',
                     'type'
-                ])->get()
+                ])->get()->each(function ($project) {
+                    $project['users'] = [
+                        'authors' => $project->users()->wherePivot('role', 'AUTHOR')->get(),
+                        'maintainers' => $project->users()->wherePivot('role', 'MAINTAINER')->get(),
+                        'developers' => $project->users()->wherePivot('role', 'DEVELOPER')->get()
+                    ];
+                })
             ]
         ], 200);
     }
@@ -66,9 +71,14 @@ class ProjectController extends Controller
                     },
                     'stacks',
                     'status',
-                    'users',
                     'type'
-                ])->get()
+                ])->get()->each(function ($project) {
+                    $project['users'] = [
+                        'authors' => $project->users()->wherePivot('role', 'AUTHOR')->get(),
+                        'maintainers' => $project->users()->wherePivot('role', 'MAINTAINER')->get(),
+                        'developers' => $project->users()->wherePivot('role', 'DEVELOPER')->get()
+                    ];
+                })
             ]
         ], 200);
     }
@@ -343,35 +353,6 @@ class ProjectController extends Controller
             }
         } else {
             return response()->json(['message' => 'Type not Found'], 404);
-        }
-    }
-
-    /**
-     * Adds new stack to the database
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function addStack(Request $request)
-    {
-        $data = $request->validate([
-            'name' => 'required|max:255|unique:stacks,name'
-        ]);
-        $stack = new Stack;
-        $stack->name = $data['name'];
-
-        \DB::transaction(function () use ($stack) {
-            $stack->save();
-        });
-
-        if ($stack->exists) {
-            return response()->json([
-                'message' => 'Stack added successfully!'
-            ], 200);
-        } else {
-            return response()->json([
-                'message' => 'Stack could not be created!'
-            ], 503);
         }
     }
 }
