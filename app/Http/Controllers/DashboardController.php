@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 
 use App\Models\Project;
+use Illuminate\Support\Facades\DB;
 
 class DashboardController extends Controller
 {
@@ -41,6 +42,18 @@ class DashboardController extends Controller
                 ])->get()->filter(function ($project) {
                     return $project->users_count < $project->max_member_count;
                 })
+            ]
+        ], 200);
+    }
+
+    public function filterOptions()
+    {
+        return response()->json([
+            "message" => "Success!",
+            "data" => [
+                'user' => DB::table('users')->select('id', 'name')->get(),
+                'stack' => DB::table('stacks')->get(),
+                'type' => DB::table('types')->get(),
             ]
         ], 200);
     }
