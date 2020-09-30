@@ -21,11 +21,11 @@ class AuthController extends Controller
         ]);
 
         $user = new User;
-        $user->name = $data->name;
-        $user->email = $data->email;
-        $user->passord = bcrypt($data->password);
-        $user->roll_number = $data->roll_number;
-        $user->github_handle = $data->github_handle;
+        $user->name = $data['name'];
+        $user->email = $data['email'];
+        $user->password = bcrypt($data['password']);
+        $user->roll_number = $data['roll_number'];
+        $user->github_handle = $data['github_handle'];
 
         \DB::transaction(function () use ($user) {
             $user->save();
