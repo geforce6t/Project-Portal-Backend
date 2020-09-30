@@ -7,7 +7,6 @@ use App\Models\Project;
 use App\Models\User;
 use App\Models\Stack;
 use App\Models\Type;
-use Illuminate\Support\Facades\DB;
 
 class ProjectController extends Controller
 {
@@ -296,63 +295,46 @@ class ProjectController extends Controller
 
     public function user_filter($user_id)
     {
-        $user_project = DB::table('project_user')->where([
-            ['user_id', '=', $user_id]
-        ])->get();
+        $filter = User::where('id', $user_id)->with(
+         'projects.stacks',
+         'projects.type', 
+         'projects.status')->get('id');
 
-        $projects = [];
-
-        if (User::find($user_id)) {
-            if (count($user_project) != 0) {
-                foreach ($user_project as $single_project) {
-                    array_push($projects, Project::find($single_project->project_id));
-                }
-                return $projects;
-            } else {
-                return response()->json(['message' => 'User has no Project involvement'], 404);
-            }
-        } else {
-            return response()->json(['message' => 'User not Found'], 404);
-        }
+        return response()->json([
+            'message' => 'Success!',
+            'data' => [
+                'filtered' => $filter
+            ]
+        ], 200);
     }
 
     public function stack_filter($stack_id)
     {
-        $stack_project = DB::table('project_stack')->where([
-            ['stack_id', '=', $stack_id]
-        ])->get();
+        $filter = Stack::where('id', $stack_id)->with(
+         'projects.stacks',
+         'projects.type', 
+         'projects.status')->get('id');
 
-        $projects = [];
-
-        if (Stack::find($stack_id)) {
-            if (count($stack_project) != 0) {
-                foreach ($stack_project as $single_project) {
-                    array_push($projects, Project::find($single_project->project_id));
-                }
-                return $projects;
-            } else {
-                return response()->json(['message' => 'No Project of this Stack'], 404);
-            }
-        } else {
-            return response()->json(['message' => 'Stack not Found'], 404);
-        }
+        return response()->json([
+            'message' => 'Success!',
+            'data' => [
+                'filtered' => $filter
+            ]
+        ], 200);
     }
 
     public function type_filter($type_id)
     {
-        $projects = DB::table('projects')->where([
-            ['type_id', '=', $type_id]
-        ])->get();
+        $filter = Type::where('id', $type_id)->with(
+         'projects.stacks',
+         'projects.type', 
+         'projects.status')->get('id');
 
-
-        if (Type::find($type_id)) {
-            if (count($projects) != 0) {
-                return $projects;
-            } else {
-                return response()->json(['message' => 'No Project of this Type'], 404);
-            }
-        } else {
-            return response()->json(['message' => 'Type not Found'], 404);
-        }
+        return response()->json([
+            'message' => 'Success!',
+            'data' => [
+                'filtered' => $filter
+            ]
+        ], 200);
     }
 }
