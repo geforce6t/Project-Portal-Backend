@@ -16,28 +16,16 @@ class ProjectController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function all(Request $request)
+    public function all()
     {
-        $userId = $request->user()->id;
-
         return response()->json([
             'message' => 'Success!',
             'data' => [
                 'projects' => Project::with([
-                    'feedbacks' => function ($feedback) use ($userId) {
-                        $feedback->where('sender_id', $userId)
-                            ->orWhere('receiver_id', $userId);
-                    },
                     'stacks',
                     'status',
                     'type'
-                ])->get()->each(function ($project) {
-                    $project['users'] = [
-                        'authors' => $project->users()->wherePivot('role', 'AUTHOR')->get(),
-                        'maintainers' => $project->users()->wherePivot('role', 'MAINTAINER')->get(),
-                        'developers' => $project->users()->wherePivot('role', 'DEVELOPER')->get()
-                    ];
-                })
+                ])->get()->makeHidden(['description', 'review', 'deadline'])
             ]
         ], 200);
     }

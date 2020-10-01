@@ -108,7 +108,7 @@ class FeedbackController extends Controller
                 'message' => 'Feedback added successfully!'
             ], 200);
         } else {
-            return responsee()->json([
+            return response()->json([
                 'message' => 'Feedback could not be added'
             ], 503);
         }
