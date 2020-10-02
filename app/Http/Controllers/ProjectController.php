@@ -185,10 +185,21 @@ class ProjectController extends Controller
             'type' => 'required|exists:types,id',
             'users' => 'nullable|array',
             'users.*.id' => 'required|exists:users,id',
-            'users.*.role' => 'required|in:AUTHOR,MAINTAINER,DEVELOPER',
+            'users.*.role' => 'required|in:MAINTAINER,DEVELOPER',
             'stacks' => 'required|array|min:1',
             'stacks.*' => 'exists:stacks,id'
         ]);
+
+        if (isset($data['users'])) {
+            if (count($data['users']) + $project->users()->wherePivot('role', 'AUTHOR')->count() > $data['max_member_count']) {
+                return response()->json([
+                    'message' => 'The given data was invalid.',
+                    'errors' => [
+                        'max_member_count' => 'Max member count is less than current user count'
+                    ]
+                ], 422);
+            }
+        }
 
         $project->name = $data['name'];
         $project->description = $data['description'];
@@ -209,6 +220,14 @@ class ProjectController extends Controller
             $project->save();
 
             if (isset($data['users'])) {
+                $authors = $project->users()->wherePivot('role', 'AUTHOR')->get();
+                $project->users()->sync([]);
+                foreach ($authors as $author) {
+                    $project->users()->attach([
+                        $author->id =>
+                        ['role' => 'AUTHOR']
+                    ]);
+                }
                 foreach ($data['users'] as $projectUser) {
                     $project->users()->syncWithoutDetaching([
                         $projectUser['id'] =>
@@ -216,6 +235,7 @@ class ProjectController extends Controller
                     ]);
                 }
             }
+            $project->stacks()->sync([]);
             $project->stacks()->syncWithoutDetaching($data['stacks']);
             $project->save();
         });
@@ -285,7 +305,7 @@ class ProjectController extends Controller
     {
         $filter = User::where('id', $user_id)->with(
          'projects.stacks',
-         'projects.type', 
+         'projects.type',
          'projects.status')->get('id');
 
         return response()->json([
@@ -300,7 +320,7 @@ class ProjectController extends Controller
     {
         $filter = Stack::where('id', $stack_id)->with(
          'projects.stacks',
-         'projects.type', 
+         'projects.type',
          'projects.status')->get('id');
 
         return response()->json([
@@ -315,7 +335,7 @@ class ProjectController extends Controller
     {
         $filter = Type::where('id', $type_id)->with(
          'projects.stacks',
-         'projects.type', 
+         'projects.type',
          'projects.status')->get('id');
 
         return response()->json([
