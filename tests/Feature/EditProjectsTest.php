@@ -50,7 +50,7 @@ class EditProjectsTest extends TestCase
         $data['stacks'] = [1, 2];
         $data['status'] = 1;
         $data['type'] = 1;
-        $data['deadline'] = null;
+        $data['enddate'] = null;
 
         Passport::actingAs($this->maintainer);
         $this->post(
@@ -81,7 +81,7 @@ class EditProjectsTest extends TestCase
         $data['stacks'] = [1, 2];
         $data['status'] = 1;
         $data['type'] = 1;
-        $data['deadline'] = null;
+        $data['enddate'] = null;
 
         Passport::actingAs($this->maintainer);
         $this->post(
@@ -110,7 +110,7 @@ class EditProjectsTest extends TestCase
         $data['stacks'] = [1, 2];
         $data['status'] = 1;
         $data['type'] = 1;
-        $data['deadline'] = null;
+        $data['enddate'] = null;
 
         Passport::actingAs($this->developer);
         $this->post(
@@ -130,7 +130,7 @@ class EditProjectsTest extends TestCase
         $data['stacks'] = [1, 2];
         $data['status'] = 1;
         $data['type'] = 1;
-        $data['deadline'] = null;
+        $data['enddate'] = null;
         $data['users'] = [
             [
                 'id' => $this->developer->id,
@@ -173,7 +173,7 @@ class EditProjectsTest extends TestCase
         $data['stacks'] = [1, 2];
         $data['status'] = 1;
         $data['type'] = 1;
-        $data['deadline'] = null;
+        $data['enddate'] = null;
         $data['users'] = [
             [
                 'id' => $this->maintainer->id,
@@ -208,7 +208,7 @@ class EditProjectsTest extends TestCase
         $data['stacks'] = [1, 2];
         $data['status'] = 1;
         $data['type'] = 1;
-        $data['deadline'] = null;
+        $data['enddate'] = null;
         $data['users'] = [
             [
                 'id' => $this->author->id,

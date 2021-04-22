@@ -25,7 +25,7 @@ class ProjectController extends Controller
                     'stacks',
                     'status',
                     'type'
-                ])->get()->makeHidden(['description', 'review', 'deadline'])
+                ])->get()->makeHidden(['description', 'review', 'enddate'])
             ]
         ], 200);
     }
@@ -82,7 +82,7 @@ class ProjectController extends Controller
         $data = $request->validate([
             'name' => 'required|max:255',
             'description' => 'required',
-            'deadline' => 'nullable|date|date_format:Y-m-d H:i:s|after_or_equal:today',
+            'enddate' => 'nullable|date|date_format:Y-m-d H:i:s',
             'max_member_count' => 'required|integer',
             'repo_link' => 'required|unique:projects,repo_link|url',
             'review' => 'nullable',
@@ -98,8 +98,8 @@ class ProjectController extends Controller
         $project = new Project;
         $project->name = $data['name'];
         $project->description = $data['description'];
-        if (isset($data['deadline'])) {
-            $project->deadline = $data['deadline'];
+        if (isset($data['enddate'])) {
+            $project->enddate = $data['enddate'];
         }
         if (isset($data['review'])) {
             $project->review = $data['review'];
@@ -174,7 +174,7 @@ class ProjectController extends Controller
         $data = $request->validate([
             'name' => 'required|max:255',
             'description' => 'required|max:5000',
-            'deadline' => 'nullable|date|date_format:Y-m-d H:i:s|after_or_equal:today',
+            'enddate' => 'nullable|date|date_format:Y-m-d H:i:s',
             'max_member_count' => 'required|integer|min:1|max:100',
             'repo_link' => 'required|unique:projects,repo_link,' . $projectId,
             'review' => 'nullable|max:1000',
@@ -211,8 +211,8 @@ class ProjectController extends Controller
 
         $project->name = $data['name'];
         $project->description = $data['description'];
-        if (isset($data['deadline'])) {
-            $project->deadline = $data['deadline'];
+        if (isset($data['enddate'])) {
+            $project->enddate = $data['enddate'];
         }
         if (isset($data['review'])) {
             $project->review = $data['review'];
