@@ -50,7 +50,8 @@ class EditProjectsTest extends TestCase
         $data['stacks'] = [1, 2];
         $data['status'] = 1;
         $data['type'] = 1;
-        $data['enddate'] = null;
+        $data['enddate'] = '2021-06-24 00:00:00';
+        $data['startdate'] = '2021-06-21 00:00:00';
 
         Passport::actingAs($this->maintainer);
         $this->post(
@@ -81,7 +82,8 @@ class EditProjectsTest extends TestCase
         $data['stacks'] = [1, 2];
         $data['status'] = 1;
         $data['type'] = 1;
-        $data['enddate'] = null;
+        $data['enddate'] = '2021-06-24 00:00:00';
+        $data['startdate'] = '2021-06-21 00:00:00';
 
         Passport::actingAs($this->maintainer);
         $this->post(
@@ -110,7 +112,8 @@ class EditProjectsTest extends TestCase
         $data['stacks'] = [1, 2];
         $data['status'] = 1;
         $data['type'] = 1;
-        $data['enddate'] = null;
+        $data['enddate'] = '2021-06-24 00:00:00';
+        $data['startdate'] = '2021-06-21 00:00:00';
 
         Passport::actingAs($this->developer);
         $this->post(
@@ -130,7 +133,8 @@ class EditProjectsTest extends TestCase
         $data['stacks'] = [1, 2];
         $data['status'] = 1;
         $data['type'] = 1;
-        $data['enddate'] = null;
+        $data['enddate'] = '2021-06-24 00:00:00';
+        $data['startdate'] = '2021-06-21 00:00:00';
         $data['users'] = [
             [
                 'id' => $this->developer->id,
@@ -173,7 +177,8 @@ class EditProjectsTest extends TestCase
         $data['stacks'] = [1, 2];
         $data['status'] = 1;
         $data['type'] = 1;
-        $data['enddate'] = null;
+        $data['enddate'] = '2021-06-24 00:00:00';
+        $data['startdate'] = '2021-06-21 00:00:00';
         $data['users'] = [
             [
                 'id' => $this->maintainer->id,
@@ -208,7 +213,8 @@ class EditProjectsTest extends TestCase
         $data['stacks'] = [1, 2];
         $data['status'] = 1;
         $data['type'] = 1;
-        $data['enddate'] = null;
+        $data['enddate'] = '2021-06-24 00:00:00';
+        $data['startdate'] = '2021-06-21 00:00:00';
         $data['users'] = [
             [
                 'id' => $this->author->id,
