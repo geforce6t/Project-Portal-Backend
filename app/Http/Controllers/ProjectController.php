@@ -25,7 +25,7 @@ class ProjectController extends Controller
                     'stacks',
                     'status',
                     'type'
-                ])->get()->makeHidden(['description', 'review', 'enddate'])
+                ])->get()->makeHidden(['description', 'review', 'enddate', 'startdate'])
             ]
         ], 200);
     }
@@ -82,6 +82,7 @@ class ProjectController extends Controller
         $data = $request->validate([
             'name' => 'required|max:255',
             'description' => 'required',
+            'startdate' => 'nullable|date|date_format:Y-m-d H:i:s|before:enddate',
             'enddate' => 'nullable|date|date_format:Y-m-d H:i:s',
             'max_member_count' => 'required|integer',
             'repo_link' => 'required|unique:projects,repo_link|url',
@@ -100,6 +101,9 @@ class ProjectController extends Controller
         $project->description = $data['description'];
         if (isset($data['enddate'])) {
             $project->enddate = $data['enddate'];
+        }
+        if (isset($data['startdate'])) {
+          $project->startdate = $data['startdate'];
         }
         if (isset($data['review'])) {
             $project->review = $data['review'];
@@ -174,6 +178,7 @@ class ProjectController extends Controller
         $data = $request->validate([
             'name' => 'required|max:255',
             'description' => 'required|max:5000',
+            'startdate' => 'nullable|date|date_format:Y-m-d H:i:s|before:enddate',
             'enddate' => 'nullable|date|date_format:Y-m-d H:i:s',
             'max_member_count' => 'required|integer|min:1|max:100',
             'repo_link' => 'required|unique:projects,repo_link,' . $projectId,
@@ -213,6 +218,9 @@ class ProjectController extends Controller
         $project->description = $data['description'];
         if (isset($data['enddate'])) {
             $project->enddate = $data['enddate'];
+        }
+        if (isset($data['startdate'])) {
+          $project->startdate = $data['startdate'];
         }
         if (isset($data['review'])) {
             $project->review = $data['review'];
