@@ -26,7 +26,8 @@ class AddProjectsTest extends TestCase
         $this->newProjectPostData['stacks'] = [1, 2];
         $this->newProjectPostData['status'] = 1;
         $this->newProjectPostData['type'] = 1;
-        $this->newProjectPostData['deadline'] = null;
+        $this->newProjectPostData['enddate'] = '2021-06-24 00:00:00';
+        $this->newProjectPostData['startdate'] = '2021-06-21 00:00:00';
 
         $this->users = User::factory()->count(3)->create();
     }

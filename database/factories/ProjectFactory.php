@@ -13,6 +13,7 @@ class ProjectFactory extends Factory {
     protected $model = Project::class;
 
     public function definition() {
+      $startdate = $this->faker->dateTimeThisYear;
     return [
         'name' => $this->faker->firstName,
         'description' => $this->faker->text,
@@ -20,7 +21,8 @@ class ProjectFactory extends Factory {
         'status_id' => Status::inRandomOrder()->value('id'),
         'repo_link' => 'https://github.com/'.$this->faker->firstName,
         'max_member_count' => $this->faker->numberBetween(1, 10),
-        'deadline' => $this->faker->dateTimeThisYear,
+        'startdate' => $startdate,
+        'enddate' => $this->faker->dateTimeBetween($startdate , '1 years'),
         'review' => $this->faker->text
     ];
 }

@@ -15,7 +15,8 @@ class CreateProjectsTable extends Migration {
 			$table->integer('status_id')->unsigned();
 			$table->string('repo_link', 255)->nullable();
 			$table->smallInteger('max_member_count')->default('1');
-			$table->date('deadline')->nullable();
+            $table->date('startdate')->nullable();
+			$table->date('enddate')->nullable();
             $table->text('review')->nullable();
             $table->softDeletes();
 			$table->timestamps();
